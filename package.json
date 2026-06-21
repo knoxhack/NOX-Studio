@@ -1,0 +1,95 @@
+{
+  "name": "nox-studio",
+  "private": true,
+  "version": "0.1.0",
+  "description": "NOX Studio — local-first AI film production OS",
+  "author": "NOX Films",
+  "type": "module",
+  "main": "electron/main.mjs",
+  "homepage": "./",
+  "scripts": {
+    "dev": "vite --host 127.0.0.1",
+    "build": "tsc && vite build",
+    "preview": "vite preview --host 127.0.0.1",
+    "desktop:dev": "concurrently \"vite --host 127.0.0.1 --port 5173 --strictPort\" \"wait-on http://127.0.0.1:5173 && electron .\"",
+    "desktop:pack": "npm run build && electron-builder --dir",
+    "desktop:dist": "npm run build && electron-builder",
+    "desktop:build": "npm run build && electron-builder --publish never",
+    "verify:production": "node scripts/verify-production-readiness.mjs",
+    "verify:supabase-live": "node scripts/verify-supabase-live.mjs",
+    "verify:grok-live": "node scripts/verify-supabase-live.mjs",
+    "verify:render": "node scripts/verify-render-smoke.mjs",
+    "verify:desktop-bridge": "node scripts/verify-desktop-bridge.mjs",
+    "verify:workflow": "node scripts/verify-v1-workflow.mjs",
+    "verify:all": "npm run verify:production && npm run verify:workflow && npm run build && npm run verify:render",
+    "supabase:preflight": "node scripts/supabase-launch.mjs",
+    "supabase:deploy": "node scripts/supabase-launch.mjs --apply",
+    "jobs:worker": "node scripts/generation-worker.mjs",
+    "jobs:healthcheck": "node scripts/worker-healthcheck.mjs",
+    "render:nox-cut": "node scripts/render-nox-cut.mjs",
+    "render:worker": "node scripts/render-worker.mjs"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.108.2",
+    "ffmpeg-static": "^5.3.0",
+    "lucide-react": "^0.468.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "@types/react": "^18.3.12",
+    "@types/react-dom": "^18.3.1",
+    "@vitejs/plugin-react": "^5.2.0",
+    "concurrently": "^9.0.0",
+    "electron": "^33.0.0",
+    "electron-builder": "^25.0.0",
+    "esbuild": "^0.28.1",
+    "typescript": "^5.6.3",
+    "vite": "^7.3.5",
+    "wait-on": "^8.0.0"
+  },
+  "build": {
+    "appId": "com.noxfilms.nox-studio",
+    "productName": "NOX Studio",
+    "directories": {
+      "output": "out"
+    },
+    "files": [
+      "dist/**/*",
+      "electron/**/*",
+      "scripts/**/*",
+      "node_modules/ffmpeg-static/**/*",
+      "package.json"
+    ],
+    "extraResources": [
+      {
+        "from": "scripts",
+        "to": "scripts"
+      }
+    ],
+    "win": {
+      "signAndEditExecutable": false,
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        },
+        {
+          "target": "portable",
+          "arch": [
+            "x64"
+          ]
+        }
+      ]
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true
+    }
+  },
+  "overrides": {
+    "esbuild": "^0.28.1"
+  }
+}

@@ -1,0 +1,25 @@
+appId: com.noxfilms.nox-studio
+productName: NOX Studio
+directories:
+  output: out
+files:
+  - dist/**/*
+  - electron/**/*
+  - scripts/**/*
+  - node_modules/ffmpeg-static/**/*
+  - package.json
+extraResources:
+  - from: scripts
+    to: scripts
+win:
+  signAndEditExecutable: false
+  target:
+    - target: nsis
+      arch:
+        - x64
+    - target: portable
+      arch:
+        - x64
+nsis:
+  oneClick: false
+  allowToChangeInstallationDirectory: true
