@@ -11,4 +11,5 @@ pnpm-debug.log*
 .nox-local/
 out/
 release/
+supabase/.temp/
 *.log
